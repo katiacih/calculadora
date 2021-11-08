@@ -3,8 +3,12 @@ button {
   margin: 4px !important;
 }
 
-input[type='text'] {
+input[type=text] {
   margin-top: 3px;
   width: 96%;
   margin-left: 6px;
+}
+
+.line-flex {
+  display: flex;
 }

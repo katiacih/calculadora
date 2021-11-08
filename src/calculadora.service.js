@@ -1,45 +1,60 @@
-
 function CalculadoraService() {
 
- const SOMA = '+';
- const SUBTRACAO = '-';
- const DIVISAO = '/';
- const MULTIPLICACAO = '*';
- 
- function calcular(numero1, numero2, operacao) {
-  let resultado
-  switch(operacao) {
-    case SOMA: resultado= numero1 + numero2; 
-    break;
-    case SUBTRACAO: resultado= numero1 - numero2;
-    break;
-    case MULTIPLICACAO: resultado= numero1 * numero2;
-    break;
-    case DIVISAO: resultado = numero2 !== 0 ? numero1 / numero2 : numero1;
-    break;
-    default: resultado = 0;
-  }
-  return resultado;
- }
+  const SOMA = '+';
+  const SUBTRACAO = '-';
+  const DIVISAO = '/';
+  const MULTIPLICACAO = '*';
 
- function concatenarNumero(numAtual, numConcat) {
-  if(numAtual === '0' || numAtual === null){
-    numAtual='';
-  }
+  function calcular(numero1, numero2, operacao) {
+    let resultado;
 
-  if(numConcat ==='.' && numAtual === ''){
-   return '0.';
+    switch(operacao) {
+      case SOMA:
+        resultado = numero1 + numero2;
+        break;
+      case SUBTRACAO:
+        resultado = numero1 - numero2;
+        break;
+      case DIVISAO:
+        resultado = numero1 / numero2;
+        break;
+      case MULTIPLICACAO:
+        resultado = numero1 * numero2;
+        break;
+      default:
+        resultado = 0;
+    }
+
+    return resultado;
   }
 
-  if(numConcat === '.' && numAtual.indexOf('.') > -1) {
-   return numAtual;
+  function concatenarNumero(numAtual, numConcat) {
+    // caso contenha apenas '0' ou null, reinicia o valor
+    if (numAtual === '0' || numAtual === null) {
+      numAtual = '';
+    }
+
+    // primeiro dígito for '.', concatena '0' antes do ponto
+    if (numConcat === '.' && numAtual === '') {
+      return '0.';
+    }
+
+    // caso '.' digitado e já contenha um ponto, apenas retornar
+    if (numConcat === '.' && numAtual.indexOf('.') > -1) {
+      return numAtual;
+    }
+
+    return numAtual + numConcat;
   }
 
-  return numAtual + numConcat
- }
-
-
- return [calcular, concatenarNumero,  SOMA, SUBTRACAO, DIVISAO, MULTIPLICACAO];
+  return [
+    calcular,
+    concatenarNumero,
+    SOMA,
+    SUBTRACAO,
+    DIVISAO,
+    MULTIPLICACAO
+  ];
 
 }
 

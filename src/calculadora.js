@@ -1,184 +1,120 @@
+import React, { useState } from 'react';
 import './calculadora.css';
-import React, { useState } from 'react'
-import { Jumbotron, 
-  Container,
-  Row,
-  Button,
-  Form,
-  Col } from 'react-bootstrap'
-  import CalculadoraService from './calculadora.service'
-
+import CalculadoraService from './calculadora.service';
+import { Button, Flex } from 'rebass'
+import { Input } from '@rebass/forms'
 
 function Calculadora() {
-  const [calcular, concatenarNumero,  SOMA, SUBTRACAO, DIVISAO, MULTIPLICACAO] =  CalculadoraService();
+
+  const [calcular, concatenarNumero, SOMA, SUBTRACAO, DIVISAO, MULTIPLICACAO] = CalculadoraService();
+
   const [txtNumeros, setTxtNumeros] = useState('0');
-  const [numero1, SetNumero1] = useState('0');
-  const [numero2, SetNumero2] = useState(null);
+  const [numero1, setNumero1] = useState('0');
+  const [numero2, setNumero2] = useState(null);
   const [operacao, setOperacao] = useState(null);
 
-  function adicionaNumero(numero) {
+  function adicionarNumero(numero) {
     let resultado;
-    if(operacao === null){
+    if (operacao === null) {
       resultado = concatenarNumero(numero1, numero);
-      SetNumero1(resultado);
-    }else {
+      setNumero1(resultado);
+    } else {
       resultado = concatenarNumero(numero2, numero);
-      SetNumero2(resultado);
+      setNumero2(resultado);
     }
     setTxtNumeros(resultado);
   }
 
   function definirOperacao(op) {
-    if(operacao === null){
-      setOperacao(op)
+    // apenas define a operação caso ela não exista
+    if (operacao === null) {
+      setOperacao(op);
       return;
     }
-    if(numero2 !== null) {
-      const resultado = calcular(parseFloat(numero1), parseFloat(numero2), operacao)
-      setOperacao(op)
-      SetNumero1(resultado.toString())
-      SetNumero2(null)
-      setTxtNumeros(resultado.toString())
+    // caso operação estiver definida e número 2 selecionado, realiza o cálculo da operação
+    if (numero2 !== null) {
+      const resultado = calcular(parseFloat(numero1), parseFloat(numero2), operacao);
+      setOperacao(op);
+      setNumero1(resultado.toString());
+      setNumero2(null);
+      setTxtNumeros(resultado.toString());
     }
-  }
-
-  function acaoLimpar() {
-    setTxtNumeros(0)
-    SetNumero1(0)
-    SetNumero2(null)
-    setOperacao(null)
   }
 
   function acaoCalcular() {
-    if(numero2 === null){
+    if (numero2 === null) {
       return;
     }
-    const resultado = calcular(parseFloat(numero1), parseFloat(numero2), operacao)
-    setTxtNumeros(resultado)
+    const resultado = calcular(parseFloat(numero1), parseFloat(numero2), operacao);
+    setTxtNumeros(resultado);
+  }
+
+  function limpar() {
+    setTxtNumeros('0');
+    setNumero1('0');
+    setNumero2(null);
+    setOperacao(null);
   }
 
   return (
-    <div  data-testid='calculadora'>
-      <Jumbotron style={{
-        background: 'transparent !important',
-        backgroundColor: '#007bff',
-        padding: '5px',
-        margin: '5px',
-        width: '400px'
-      }}
-    
-      >
-        <Container>
-          <Row>
-            <Col xs='3'>
-              <Button onClick={() => acaoLimpar()} variant='danger'>C</Button>
-            </Col>
-            <Col xs='9'>
-              <Form.Control
-                data-testid='input'
-                type='text'
-                name='txtNumeros'
-                className='text-right'
-                readOnly='readonly'
-                onChange ={definirOperacao}
-                value={txtNumeros}
-              />
-            </Col>
-          </Row>
+    <div style={{
+      background: 'transparent !important',
+      backgroundColor: 'rgb(203 211 219)',
+      padding: '5px',
+      margin: '5px',
+      width: '400px'
+    }}>
+    <Flex className='line-flex'>
+      <Button className="btn-danger" style={{ width: '66px' }} variant='primary' mr={2} onClick={limpar}>C</Button>
+      <Input
+        type="text"
+        name="txtNumeros"
+        className="text-right"
+        readOnly="readonly"
+        value={txtNumeros}
+        data-testid="txtNumeros"
+      />
+    </Flex>
 
-          <Row>
-            <Col>
-              <Button  
-                onClick={ () =>  adicionaNumero(7)} 
-                variant='light'>7</Button>
-            </Col>
-            <Col>
-              <Button 
-                onClick={ () =>  adicionaNumero(8)} 
-                variant='light'>8</Button>
-            </Col>
-            <Col>
-              <Button 
-                onClick={ () =>  adicionaNumero(9)} 
-                variant='light'>9</Button>
-            </Col>
-            <Col>
-              <Button
-                onClick={ () => definirOperacao(DIVISAO)} 
-                variant='warning'>/</Button>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <Button 
-                onClick={ () =>  adicionaNumero(4)} 
-                variant='light'>4</Button>
-            </Col>
-            <Col>
-              <Button 
-                onClick={ () =>  adicionaNumero(5)} 
-                variant='light'>5</Button>
-            </Col>
-            <Col>
-              <Button 
-                  onClick={ () =>  adicionaNumero(6)} 
-                variant='light'>6</Button>
-            </Col>
-            <Col>
-              <Button 
-                onClick={ () => definirOperacao(MULTIPLICACAO)} 
-                variant='warning'>*</Button>
-            </Col>
-          </Row>
+    <Flex>
+      <Button variant="btn-secondary" style={{backgroundColor: '#6495ed'}} onClick={() => adicionarNumero('7')}>7</Button>
+      <Button variant="light" style={{backgroundColor: '#6495ed'}}
+        onClick={() => adicionarNumero('8')}>8</Button>
+      <Button variant="light" style={{backgroundColor: '#6495ed'}}
+            onClick={() => adicionarNumero('9')}>9</Button>
+      <Button  style={{backgroundColor: '#778899'}}
+            onClick={() => definirOperacao(DIVISAO)}>/</Button>
+    </Flex>
 
-          <Row>
-            <Col>
-              <Button 
-                  onClick={ () =>  adicionaNumero(1)} 
-                variant='light'>1</Button>
-            </Col>
-            <Col>
-              <Button 
-                  onClick={ () =>  adicionaNumero(2)} 
-                variant='light'>2</Button>
-            </Col>
-            <Col>
-              <Button 
-                onClick={ () =>  adicionaNumero(3)} 
-                variant='light'>3</Button>
-            </Col>
-            <Col>
-              <Button 
-                onClick={ () => definirOperacao(SUBTRACAO)}
-                variant='warning'>-</Button>
-            </Col>
-          </Row>
+    <Flex>
+      <Button variant="btn-secondary" style={{backgroundColor: '#6495ed'}} onClick={() => adicionarNumero('4')}>4</Button>
+      <Button variant="light" style={{backgroundColor: '#6495ed'}}
+        onClick={() => adicionarNumero('5')}>5</Button>
+      <Button variant="light" style={{backgroundColor: '#6495ed'}}
+            onClick={() => adicionarNumero('6')}>6</Button>
+      <Button  style={{backgroundColor: '#778899'}}
+        onClick={() => definirOperacao(MULTIPLICACAO)}>*</Button>
+    </Flex>
 
-          <Row>
-            <Col>
-              <Button
-                onClick={ () => adicionaNumero(0)}  
-                variant='light'>0</Button>
-            </Col>
-            <Col>
-              <Button 
-                onClick={ () => adicionaNumero('.')}
-                variant='light'>.</Button>
-            </Col>
-            <Col>
-              <Button 
-                onClick={acaoCalcular}
-                variant='success'>=</Button>
-            </Col>
-            <Col>
-              <Button 
-                onClick={ () => definirOperacao(SOMA)}
-                variant='warning'>+</Button>
-            </Col>
-          </Row>
-        </Container>
+    <Flex>
+      <Button variant="btn-secondary" style={{backgroundColor: '#6495ed'}} onClick={() => adicionarNumero('1')}>1</Button>
+      <Button variant="light" style={{backgroundColor: '#6495ed'}}
+        onClick={() => adicionarNumero('2')}>2</Button>
+      <Button variant="light" style={{backgroundColor: '#6495ed'}}
+            onClick={() => adicionarNumero('3')}>3</Button>
+      <Button  style={{backgroundColor: '#778899'}}
+        onClick={() => definirOperacao(SUBTRACAO)}>-</Button>
+    </Flex>
 
-      </Jumbotron>
+    <Flex>
+      <Button style={{backgroundColor: '#6495ed'}} onClick={() => adicionarNumero('0')}>0</Button>
+      <Button style={{backgroundColor: '#6495ed'}}
+        onClick={() => adicionarNumero('.')}>.</Button>
+      <Button  style={{backgroundColor: '#cb64ed'}}
+        onClick={acaoCalcular}>=</Button>
+      <Button  style={{backgroundColor: '#778899'}}
+        onClick={() => definirOperacao(SOMA)}>+</Button>
+    </Flex>
     </div>
   );
 }
